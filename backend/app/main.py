@@ -146,6 +146,11 @@ app.add_middleware(
 )
 
 
+@app.get("/")
+def home() -> dict[str, str]:
+    return {"message": "L&C Emailing — Lead & Connect platform running"}
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
