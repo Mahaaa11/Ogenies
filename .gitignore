@@ -1,0 +1,18 @@
+output/
+output_*/
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+.env
+.env.*
+!.env.example
+!.env.production.example
+.DS_Store
+*.zip
+powerbi_dataset/
+# Build statique du front (genere par `npm run build:static`)
+frontend/out/
+frontend/.next/
+frontend/node_modules/
+frontend/.env.production

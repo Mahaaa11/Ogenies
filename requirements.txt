@@ -1,0 +1,10 @@
+pymysql>=1.1.0
+fastapi>=0.110.0
+uvicorn>=0.27.0
+sendgrid>=6.11.0
+certifi>=2024.2.2
+streamlit>=1.35.0
+pandas>=2.2.0
+plotly>=5.22.0
+# Pont ASGI -> WSGI utilise par passenger_wsgi.py (deploiement PlanetHoster N0C).
+a2wsgi>=1.10.0

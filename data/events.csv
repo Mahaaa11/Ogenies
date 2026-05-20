@@ -1,0 +1,11 @@
+prospect_id,event_type,campaign_step,day,hour
+P001,open,J0,0,9
+P001,click,J0,0,10
+P001,open,J+2,2,9
+P002,open,J0,0,15
+P002,open,J+2,2,16
+P003,open,J0,0,11
+P004,open,J0,0,8
+P004,click,J0,0,8
+P004,click,J+2,2,9
+P005,open,J0,0,13

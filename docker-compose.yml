@@ -1,0 +1,66 @@
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-lnc_emailing}
+      - MYSQL_USER=${MYSQL_USER:-lnc}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-lnc}
+    ports:
+      - "3306:3306"
+    # MySQL 8.0 works well with phpMyAdmin defaults.
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql:/docker-entrypoint-initdb.d
+
+  phpmyadmin:
+    image: phpmyadmin:5
+    ports:
+      - "8080:80"
+    environment:
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
+      - PMA_ARBITRARY=1
+    depends_on:
+      - mysql
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - LNC_CORS_ORIGINS=http://localhost:3000,http://localhost:3001
+      - LNC_EVENT_STORE=mysql
+      - LNC_PROSPECT_SOURCE=mysql
+      - LNC_MYSQL_HOST=mysql
+      - LNC_MYSQL_PORT=3306
+      - LNC_MYSQL_USER=${MYSQL_USER:-lnc}
+      - LNC_MYSQL_PASSWORD=${MYSQL_PASSWORD:-lnc}
+      - LNC_MYSQL_DATABASE=${MYSQL_DATABASE:-lnc_emailing}
+      - LNC_MYSQL_PROSPECTS_TABLE=prospects
+      - LNC_MYSQL_EVENTS_TABLE=email_events
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY:-}
+      - LNC_SENDGRID_TEMPLATE_ID=${LNC_SENDGRID_TEMPLATE_ID:-}
+      - LNC_SENDGRID_FROM_EMAIL=${LNC_SENDGRID_FROM_EMAIL:-}
+    volumes:
+      - .:/app
+    depends_on:
+      - mysql
+
+  web:
+    image: node:22-alpine
+    working_dir: /app/frontend
+    command: sh -lc "npm install && npm run dev -- --port 3000 --hostname 0.0.0.0"
+    ports:
+      - "3001:3000"
+    environment:
+      - NEXT_PUBLIC_API_BASE=http://localhost:8000
+      - INTERNAL_API_BASE=http://api:8000
+    volumes:
+      - .:/app
+    depends_on:
+      - api
+
+volumes:
+  mysql_data:
+
